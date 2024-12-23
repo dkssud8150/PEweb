@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background: #333;
+            color: white;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .sidebar h2 {
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            padding: 10px 0;
+            cursor: pointer;
+        }
+        .sidebar ul li:hover {
+            background: #444;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            background: #f4f4f4;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .admin-section {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .admin-section h3 {
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .button {
+            background: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .table th {
+            background: #f8f8f8;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <ul>
+            <li>Dashboard</li>
+            <li>Manage Users</li>
+            <li>Reports</li>
+            <li>Settings</li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+            <div>
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+        <div class="admin-section">
+            <h3>Add New User</h3>
+            <form>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" name="role">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="button">Add User</button>
+            </form>
+        </div>
+        <div class="admin-section">
+            <h3>User List</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>JohnDoe</td>
+                        <td>john@example.com</td>
+                        <td>Admin</td>
+                        <td>
+                            <button class="button">Edit</button>
+                            <button class="button" style="background: #dc3545;">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>JaneSmith</td>
+                        <td>jane@example.com</td>
+                        <td>User</td>
+                        <td>
+                            <button class="button">Edit</button>
+                            <button class="button" style="background: #dc3545;">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
