@@ -3,20 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-time 3D Pose Estimation</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background: #333;
+            color: white;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .sidebar h2 {
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            padding: 10px 0;
+            cursor: pointer;
+        }
+        .sidebar ul li:hover {
+            background: #444;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            background: #f4f4f4;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .charts {
+            display: flex;
+            justify-content: space-between;
+        }
+        .bar-chart {
+            width: 30vw;
+            background: rgb(255, 255, 255);
+            padding-left: 5vw;
+            padding-right: 5vw;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .pie-chart {
+            width: 20vw;
+            background: rgb(255, 255, 255);
+            padding-left: 10vw;
+            padding-right: 10vw;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .tables {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        table th {
+            background: #f8f8f8;
+        }
+        .table-label {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .status-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            color: white;
+            font-size: 14px;
+        }
+        .status-icon.high {
+            background-color: #4caf50; /* Green */
+        }
+        .status-icon.low {
+            background-color: #f44336; /* Red */
+        }
+        .score-box .score {
+            background-color: #ffd700; /* Gold */
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: black;
+            font-weight: bold;
+        }
+        table th:nth-child(2), table td:nth-child(2) {
+            width: 80px; /* 줄어든 Status 열 너비 */
+            text-align: center;
+        }
+        table th:nth-child(3), table td:nth-child(3) {
+            width: 80px; /* 줄어든 Status 열 너비 */
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>Real-time 3D Pose Estimation</h1>
-    <div class="container">
-        <video id="video" autoplay muted></video>
-        <canvas id="output"></canvas>
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <ul>
+            <li>Overview</li>
+            <li>Statistics</li>
+            <li>User Management</li>
+            <li>Settings</li>
+        </ul>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-    <script src="script.js"></script>
+    <div class="main-content">
+        <div class="header">
+            <h1>Dashboard</h1>
+            <div>
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+        <div class="charts">
+            <div class="bar-chart">
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="pie-chart">
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+        <div class="tables">
+            <h3>Data Table</h3>
+            <div class="table-label"></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Status</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const users = [
+            { name: "윤OO", score: 92 },
+            { name: "최OO", score: 83 },
+            { name: "박OO", score: 67 },
+            { name: "김OO", score: 50 }
+        ];
+
+        const tableBody = document.querySelector("tbody");
+
+        users.forEach(user => {
+            const row = document.createElement("tr");
+
+            const nameCell = document.createElement("td");
+            nameCell.textContent = user.name;
+            row.appendChild(nameCell);
+
+            const statusCell = document.createElement("td");
+            const statusIcon = document.createElement("div");
+            statusIcon.classList.add("status-icon", user.score >= 80 ? "high" : "low");
+            statusIcon.innerHTML = user.score >= 80 ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>';
+            statusCell.appendChild(statusIcon);
+            row.appendChild(statusCell);
+
+            const scoreCell = document.createElement("td");
+            const scoreBox = document.createElement("span");
+            scoreBox.classList.add("score-box");
+            const score = document.createElement("span");
+            score.classList.add("score");
+            score.textContent = user.score;
+            scoreBox.appendChild(score);
+            scoreCell.appendChild(scoreBox);
+            row.appendChild(scoreCell);
+
+            tableBody.appendChild(row);
+        });
+
+
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [
+                    {
+                        // label: 'Sales',
+                        data: [12, 19, 3, 5, 2, 10, 8],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Trend Line',
+                        data: [10, 15, 18, 25, 30, 25, 25],
+                        type: 'line',
+                        borderColor: 'rgba(255, 165, 0, 1)',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                // labels: ['Category A', 'Category B', 'Category C', 'Category D', 'Category E', 'Category F'],
+                datasets: [{
+                    data: [10, 20, 30, 15, 25, 10],
+                    backgroundColor: ['#ee6767', '#f39762', '#dbcf5e', '#69f0b1', '#4a7ecc', '#ad5add']
+                }]
+            },
+            options: {
+                responsive: true,
+            }
+        });
+    </script>
 </body>
 </html>

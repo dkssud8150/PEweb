@@ -1,22 +1,22 @@
 const express = require('express');
-const https = require('https');
-const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = 443;
+const PORT = 3000;
 
-const options = {
-  key: fs.readFileSync(path.join(__dirname, 'key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
-};
+app.get('/favicon.ico', (req, res) => res.status(204));
 
+// 정적 파일 제공
 app.use(express.static(path.join(__dirname)));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-https.createServer(options, app).listen(PORT, () => {
-  console.log(`Server is running on https://localhost:${PORT}`);
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running at http://localhost:${PORT}`);
 });
